@@ -5,7 +5,6 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 
 from .forms import CompanyLoginForm, CompanyRegistrationForm
-from .models import InsuranceCompany
 
 
 class CompanyRegisterView(View):
