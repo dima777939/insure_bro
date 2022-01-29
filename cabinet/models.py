@@ -16,17 +16,17 @@ class Category(models.Model):
 class Product(models.Model):
 
     PERIODS = (
-        ('1 мес', '30'),
-        ('3 мес', '90'),
-        ('6 мес', '180'),
-        ('12 мес', '365')
+        ('30', '1 мес'),
+        ('60', '3 мес'),
+        ('180', '6 мес'),
+        ('365', '12 мес')
     )
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
     name = models.CharField(max_length=20, verbose_name='Название страховки')
     price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='цена')
-    interest_rate = models.SmallIntegerField(max_length=2, verbose_name='Процентная ставка')
-    period = models.CharField(choices=PERIODS, verbose_name='Период страхования')
+    interest_rate = models.SmallIntegerField(verbose_name='Процентная ставка')
+    period = models.CharField(choices=PERIODS, max_length=6, verbose_name='Период страхования')
 
     class Meta:
         verbose_name = 'Страховое предложение'
