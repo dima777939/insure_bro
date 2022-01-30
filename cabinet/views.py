@@ -25,7 +25,7 @@ class ListProductView(View):
 
     def get(self, request):
         company = request.user
-        products = Product.objects.filter(pk=company.pk)
+        products = Product.objects.filter(company_id=company.pk)
         return render(request, 'cabinet/list_product.html', {'products': products})
 
 
