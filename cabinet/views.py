@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.views import View
 
 from .forms import ProductForm
+from .models import Product
 
 
 class CreateProductView(View):
@@ -14,7 +15,9 @@ class CreateProductView(View):
     def post(self, request):
         form = ProductForm(request.POST)
         if form.is_valid():
-            form.save()
+            new_form = form.save(commit=False)
+            new_form.company = request.user
+            new_form.save()
             return redirect(reverse('cabinet:create'))
 
 

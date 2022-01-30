@@ -1,4 +1,5 @@
 from django.db import models
+from account.models import InsuranceCompany
 
 
 class Category(models.Model):
@@ -21,12 +22,13 @@ class Product(models.Model):
         ('180', '6 мес'),
         ('365', '12 мес')
     )
-
+    company = models.ForeignKey(InsuranceCompany, on_delete=models.CASCADE, verbose_name='Страховая компания')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
     name = models.CharField(max_length=20, verbose_name='Название страховки')
-    price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='цена')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='цена')
     interest_rate = models.SmallIntegerField(verbose_name='Процентная ставка')
     period = models.CharField(choices=PERIODS, max_length=6, verbose_name='Период страхования')
+    date_create = models.DateField(auto_now=True)
 
     class Meta:
         verbose_name = 'Страховое предложение'

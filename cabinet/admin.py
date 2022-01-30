@@ -11,5 +11,5 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['category', 'name', 'price', 'interest_rate', 'period']
-    list_filter = ['category', 'interest_rate', 'period']
+    list_display = ['category', 'name', 'price', 'interest_rate', 'period', 'date_create']
+    list_filter = ['category', 'interest_rate', 'period', 'date_create']
