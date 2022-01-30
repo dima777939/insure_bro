@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views import View
 
 from .forms import ProductForm
-from .models import Product
+from .models import Product, Response
 
 
 class CreateProductView(View):
@@ -24,8 +24,16 @@ class CreateProductView(View):
 class ListProductView(View):
 
     def get(self, request):
-        products = Product.objects.all()
+        company = request.user
+        products = Product.objects.filter(pk=company.pk)
         return render(request, 'cabinet/list_product.html', {'products': products})
 
+
+class ListResponseView(View):
+
+    def get(self, request):
+        company = request.user
+        responses = Response.objects.filter(product__company_id=company.pk)
+        return render(request, 'cabinet/responses_to_product.html', {'responses': responses})
 
 

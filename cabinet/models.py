@@ -1,5 +1,8 @@
 from django.db import models
+from django.core.validators import RegexValidator
+
 from account.models import InsuranceCompany
+from .widgets import PhoneWidget
 
 
 class Category(models.Model):
@@ -36,4 +39,15 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Response(models.Model):
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Вид страховки')
+    first_name = models.CharField(max_length=50, verbose_name='Имя')
+    last_name = models.CharField(max_length=50, verbose_name='Фамилия')
+    phone_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+    phone = models.CharField(validators=[phone_regex], max_length=16, blank=True, verbose_name='Номер телефона')
+    email = models.EmailField(max_length=50, verbose_name='Электронная почта')
+    finished = models.BooleanField(default=False, verbose_name='Отклик обработан')
 
