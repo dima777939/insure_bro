@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Страховые предложения{% endblock %}
+{% block content %}
+	<div class="content">
+		<ul>
+			{% for product in products %}
+				<li >
+					<div class="cart">
+						<h2>Категория {{ product.category }}</h2>
+						<p>{{ product.name }}</p>
+						<div>
+							Страховой период {{ product.period }} дней.
+							Процентная ставка {{ product.interest_rate }} %.
+						</div>
+						<div>
+							Стоимость {{ product.price }} руб.
+						</div>
+					</div>
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+{% endblock %}

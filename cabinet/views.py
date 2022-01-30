@@ -21,4 +21,11 @@ class CreateProductView(View):
             return redirect(reverse('cabinet:create'))
 
 
+class ListProductView(View):
+
+    def get(self, request):
+        products = Product.objects.all()
+        return render(request, 'cabinet/list_product.html', {'products': products})
+
+
 
