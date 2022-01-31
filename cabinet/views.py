@@ -7,10 +7,9 @@ from .models import Product, Response
 
 
 class CreateProductView(View):
-
     def get(self, request):
         form = ProductForm()
-        return render(request, 'cabinet/create_product.html', {'form': form})
+        return render(request, "cabinet/create_product.html", {"form": form})
 
     def post(self, request):
         form = ProductForm(request.POST)
@@ -18,22 +17,20 @@ class CreateProductView(View):
             new_form = form.save(commit=False)
             new_form.company = request.user
             new_form.save()
-            return redirect(reverse('cabinet:create'))
+            return redirect(reverse("cabinet:create"))
 
 
 class ListProductView(View):
-
     def get(self, request):
         company = request.user
         products = Product.objects.filter(company_id=company.pk)
-        return render(request, 'cabinet/list_product.html', {'products': products})
+        return render(request, "cabinet/list_product.html", {"products": products})
 
 
 class ListResponseView(View):
-
     def get(self, request):
         company = request.user
         responses = Response.objects.filter(product__company_id=company.pk)
-        return render(request, 'cabinet/responses_to_product.html', {'responses': responses})
-
-
+        return render(
+            request, "cabinet/responses_to_product.html", {"responses": responses}
+        )

@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Добро пожаловать!</h1>
     <p>
-    Компания{{ new_company.name|upper }} зарегистрирована на платформе.
+    Компания {{ new_company.name|upper }} зарегистрирована на платформе.
     <span> Теперь можно <a href="{% url 'account:login' %}">авторизоватся</a> на сайте</span>
     </p>
 {% endblock %}

@@ -8,29 +8,44 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='InsuranceCompany',
+            name="InsuranceCompany",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('name', models.CharField(max_length=20, unique=True, verbose_name='Название компании')),
-                ('description', models.CharField(max_length=500, verbose_name='Описание')),
-                ('email', models.EmailField(max_length=50, unique=True)),
-                ('is_staff', models.BooleanField(default=False)),
-                ('is_active', models.BooleanField(default=True)),
-                ('date_joined', models.DateTimeField(auto_now=True)),
-                ('last_login', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("password", models.CharField(max_length=128, verbose_name="password")),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=20, unique=True, verbose_name="Название компании"
+                    ),
+                ),
+                (
+                    "description",
+                    models.CharField(max_length=500, verbose_name="Описание"),
+                ),
+                ("email", models.EmailField(max_length=50, unique=True)),
+                ("is_staff", models.BooleanField(default=False)),
+                ("is_active", models.BooleanField(default=True)),
+                ("date_joined", models.DateTimeField(auto_now=True)),
+                ("last_login", models.DateTimeField(auto_now_add=True)),
             ],
             options={
-                'verbose_name': 'Страховая компания',
-                'ordering': ('name',),
+                "verbose_name": "Страховая компания",
+                "ordering": ("name",),
             },
             managers=[
-                ('object', account.models.AccountManager()),
+                ("object", account.models.AccountManager()),
             ],
         ),
     ]

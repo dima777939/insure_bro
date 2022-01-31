@@ -4,6 +4,4 @@ from .models import InsuranceCompany
 
 @admin.register(InsuranceCompany)
 class InsuranceCompanyAdmin(admin.ModelAdmin):
-    list_display = ['name', 'email', 'description']
-
-
+    list_display = ["name", "email", "description"]
