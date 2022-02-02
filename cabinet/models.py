@@ -2,7 +2,6 @@ from django.db import models
 from django.core.validators import RegexValidator
 
 from account.models import InsuranceCompany
-from .widgets import PhoneWidget
 
 
 class Category(models.Model):
@@ -26,7 +25,7 @@ class Product(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, verbose_name="Категория"
     )
-    name = models.CharField(max_length=20, verbose_name="Название страховки")
+    name = models.CharField(max_length=100, verbose_name="Название страховки")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="цена")
     interest_rate = models.SmallIntegerField(verbose_name="Процентная ставка")
     period = models.CharField(

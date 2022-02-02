@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
 {% block title %}Создать страховое предложение{% endblock %}
 {% block content %}
-	<div class="content">
+	<div class="block block_form">
 		<h1>Новое страховое предложение</h1>
-		<form action="." method="post">
+		<form action="." method="post" class="form">
 			{% csrf_token %}
-			{{ form.as_table }}
-			<input type="submit" value="Создать">
+            {% bootstrap_form form layout="inline"%}
+			{% bootstrap_button content="Создать" button_type="submit" button_class="btn btn-primary" size="md"%}
 		</form>
 	</div>
+    {% include 'cabinet/off_canvas.html' %}
 {% endblock %}

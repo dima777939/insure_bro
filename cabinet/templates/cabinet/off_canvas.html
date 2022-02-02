@@ -1,0 +1,19 @@
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" >
+    <div class="offcanvas-header">
+        <h5 id="offcanvasRightLabel">Меню</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link " href="{% url 'cabinet:list_product' %}">Активные предложения</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'cabinet:create' %}">Новый продукт</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Отклики на предложение</a>
+            </li>
+        </ul>
+    </div>
+</div>

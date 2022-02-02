@@ -1,0 +1,59 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: wheat;
+}
+
+.content{
+    display: flex;
+    justify-content: center;
+    margin: 1%;
+    padding: 0;
+    font-size: 14px;
+
+}
+
+.block {
+    display: block;
+    border-radius: 5px;
+    box-shadow: 0 0 15px;
+}
+
+.block_form{
+    width: 500px;
+    padding: 15px;
+    margin-top: 1%;
+    background-color: aliceblue;
+}
+
+.block_card{
+    min-height: 750px;
+    min-width: 1200px;
+    margin: 15px;
+    background-color: aliceblue;
+    list-style: None;
+}
+
+.card{
+    margin: 20px;
+    padding: 15px;
+    max-width: 600px;
+    justify-content: center;
+}
+
+.form, .form-group{
+    margin: 15px;
+}
+
+button{
+    position: relative;
+    left: 15px;
+}
+
+h1, h2, h3 {
+    width: 80%;
+    margin-left: 20px;
+    margin-right: 20px;
+    text-align: center;
+
+}
