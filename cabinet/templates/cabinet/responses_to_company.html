@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Отклики{% endblock %}
+{% block content %}
+    <ul class=" nav nav-tabs navbar-expand-lg">
+      <li class="nav-item justify-content-center">
+          <a class="nav-link active lh-sm"  href="{% url "cabinet:responses_active" %}">Активные отклики</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="{% url "cabinet:responses_completed" "completed" %}">Обработанные отклики</a>
+      </li>
+    </ul>
+    <h2></h2>
+		<ul class="block block_card">
+			{% for response in responses %}
+				<li class="res_activ">
+					<div class="block card">
+						<h2>Категория: {{ response.product.category|lower }}</h2>
+						<p>{{ response.product.name }}</p>
+						<div>
+							Страховой период {{ response.product.period }} дней.
+							Процентная ставка {{ response.product.interest_rate }} %.
+						</div>
+						<div>
+							Стоимость {{ response.product.price }} руб.
+						</div>
+					</div>
+                    <div class="arrow-1">
+                        <div></div>
+                    </div>
+                    <div class="block card align-items-baseline">
+                        <h2> Клиент: {{ response.first_name|capfirst }} {{ response.last_name|capfirst }}</h2>
+                        <div class="mt-1">
+                            Телефон: {{ response.phone}}
+                        </div>
+                        <div class="mt-1">
+                            email: {{ response.email }}
+                        </div>
+                        <button class="btn btn-outline-secondary btn-sm mt-2" type="button" onclick="window.location='#'">
+                            Отклик обработан
+                        </button>
+                    </div>
+				</li>
+			{% endfor %}
+		</ul>
+    {% include 'cabinet/off_canvas.html' %}
+{% endblock %}

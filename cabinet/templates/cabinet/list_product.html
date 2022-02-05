@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Страховые предложения{% endblock %}
 {% block content %}
-	<div class="content">
+    <h2>Активные предложения</h2>
 		<ul class="block block_card">
 			{% for product in products %}
 				<li >
@@ -19,6 +19,5 @@
 				</li>
 			{% endfor %}
 		</ul>
-	</div>
     {% include 'cabinet/off_canvas.html' %}
 {% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Страховые предложения{% endif %}
+{% endblock %}
+{% block content %}
+    <ul class=" nav nav-tabs navbar-expand-lg">
+      <li class="nav-item justify-content-center">
+          <a {% if not category %}class="nav-link active lh-sm" {% else %} class="nav-link"{% endif %} href="{% url "cabinet:responses_list" %}">Все предложения</a>
+      </li>
+      {% for c in categories %}
+        <li class="nav-item">
+            <a {% if category.slug == c.slug %} class="nav-link active" {% else %} class="nav-link"{% endif %} href="{{ c.get_absolute_url  }}">{{ c.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+    <ul class="block block_card">
+        {% for product in products %}
+            <li >
+                <div class="block card">
+                    <h2>Категория: {{ product.category|lower }}</h2>
+                    <p>Предложение от компании {{ product.company.name }}</p>
+                    <p>{{ product.name }}</p>
+                    <div>
+                        Страховой период {{ product.period }} дней.
+                        Процентная ставка {{ product.interest_rate }} %.
+                    </div>
+                    <div>
+                        Стоимость {{ product.price }} руб.
+                        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample{{ product.id }}" aria-expanded="false" aria-controls="collapseExample">
+                            Купить предложение
+                        </button>
+                        <div class="collapse" id="collapseExample{{ product.id }}">
+                          <div class="card card-body">
+                            <div class="block block_form">
+                                <h5>Оставьте свои контакты</h5>
+                                <form action="{% url "cabinet:post_response_form" product.id %}" method="post" class="form">
+                                    {% csrf_token %}
+                                    {% bootstrap_form response_form layout="inline"%}
+                                    {% bootstrap_button content="Отправить" button_type="submit" button_class="btn btn-primary" size="md"%}
+                                </form>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

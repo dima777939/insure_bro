@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from django.urls import reverse
 
 from account.models import InsuranceCompany
 
@@ -14,6 +15,9 @@ class Category(models.Model):
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
+
+    def get_absolute_url(self):
+        return reverse("cabinet:responses_list_category", args=[self.slug])
 
 
 class Product(models.Model):
@@ -36,6 +40,7 @@ class Product(models.Model):
     class Meta:
         verbose_name = "Страховое предложение"
         verbose_name_plural = "Страховые предложения"
+        ordering = ["-date_create"]
 
     def __str__(self):
         return self.name
