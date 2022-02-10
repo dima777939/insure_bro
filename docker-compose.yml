@@ -2,10 +2,10 @@ version: "3.8"
 
 services:
   web:
-    build: ./insure_bro
-    command: python manage.py runserver 0.0.0.0:8000
+    build: .
+    command: python /usr/src/insure_bro/manage.py runserver 0.0.0.0:8000 && python /usr/src/insure_bro/manage.py makemigrations && python /usr/src/insure_bro/manage.py migration
     volumes:
-      - .insure_bro:/usr/src/insure_bro/
+      - .:/usr/src/insure_bro/
     ports:
       - "8000:8000"
     env_file:
