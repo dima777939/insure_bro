@@ -1,10 +1,27 @@
-body{
+body {
     margin: 0;
     padding: 0;
-    background-color: wheat;
+    background-color: #ffffff;
 }
 
-.content{
+nav.navbar {
+    background-color: #eedeff;
+}
+
+a, a.nav-link {
+    color: #d953ee;
+    text-decoration: none;
+}
+
+a:hover, a.nav-link:hover {
+    color: #acacb6;
+}
+
+a {
+    padding: 30px;
+}
+
+.content {
     display: flex;
     flex-direction: column;
     margin: 1%;
@@ -15,40 +32,50 @@ body{
 .block {
     display: block;
     border-radius: 5px;
-    box-shadow: 0 0 5px;
 }
 
 .block_form{
     width: 500px;
     padding: 15px;
     margin-top: 1%;
-    background-color: aliceblue;
 }
 
-.block_card{
+.block_card {
     flex-direction: column;
     min-height: 750px;
     min-width: 700px;
     margin: 15px;
     background-color: aliceblue;
+
+}
+
+ul {
     list-style: None;
 }
 
-.card{
+.card {
     margin: 20px;
     padding: 15px;
     max-width: 600px;
     justify-content: center;
+    background-color: #eedeff;
 }
 
 
-.form, .form-group{
+.form, .form-group {
     margin: 15px;
 }
 
-button.btn-primary{
+button.btn-outline-secondary {
     position: relative;
     left: 15px;
+}
+
+.form-filter {
+    background-color: #eedeff;
+    min-width: 350px;
+    padding: 15px;
+    margin: 20px;
 }
 
 h1, h2, h3 {
@@ -58,11 +85,18 @@ h1, h2, h3 {
     text-align: center;
 }
 
-.res_activ{
+.res_activ {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+}
+
+.block_products {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
 }
 
 .arrow-1 {
@@ -72,6 +106,7 @@ h1, h2, h3 {
     height: 50px;
     margin: 20px;
 }
+
 .arrow-1 div {
     position: relative;
     top: 20px;

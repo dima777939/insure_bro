@@ -7,7 +7,7 @@
 		<form action="." method="post" class="form">
 			{% csrf_token %}
             {% bootstrap_form form layout="inline"%}
-			{% bootstrap_button content="Создать" button_type="submit" button_class="btn btn-primary" size="md"%}
+			{% bootstrap_button content="Создать" button_type="submit" button_class="btn btn-outline-secondary" size="md" %}
 		</form>
 	</div>
     {% include 'cabinet/off_canvas.html' %}
