@@ -67,9 +67,10 @@
         <div class="block form-filter">
             <form action="{% url "cabinet:filter_product" %}" method="get">
                 {% csrf_token %}
-                {% bootstrap_label content="Выберите компанию" %}
+                {% bootstrap_label content="Выберите подходящие параметры" %}
                 {% bootstrap_field form_filter.company required=False %}
                 {% bootstrap_field form_filter.category required=False %}
+				{% bootstrap_field form_filter.name required=False %}
                 {% bootstrap_field form_filter.min_price %}
                 {% bootstrap_field form_filter.max_price %}
                 {% bootstrap_field form_filter.min_interest_rate %}

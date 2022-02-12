@@ -20,9 +20,16 @@ class FilterProductForm(forms.Form):
     PERIODS = (("30", "1 мес"), ("60", "3 мес"), ("180", "6 мес"), ("365", "12 мес"))
 
     company = forms.ModelChoiceField(
-        queryset=InsuranceCompany.object.all(), required=False
+        queryset=InsuranceCompany.object.all(),
+        required=False,
+        label="Страховая компания",
     )
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False)
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(), required=False, label="Категория"
+    )
+    name = forms.CharField(
+        min_length=3, max_length=20, required=False, label="Описание"
+    )
     min_price = forms.IntegerField(
         initial=0, min_value=0, max_value=99999998, label="Минимальная цена"
     )
