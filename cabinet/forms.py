@@ -20,14 +20,24 @@ class FilterProductForm(forms.Form):
     PERIODS = (("30", "1 мес"), ("60", "3 мес"), ("180", "6 мес"), ("365", "12 мес"))
 
     company = forms.ModelChoiceField(
-        queryset=InsuranceCompany.object.all(), required=False
+        queryset=InsuranceCompany.object.all(),
+        required=False,
+        label="Страховая компания",
     )
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False)
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(), required=False, label="Категория"
+    )
+    name = forms.CharField(
+        min_length=3, max_length=20, required=False, label="Описание"
+    )
     min_price = forms.IntegerField(
         initial=0, min_value=0, max_value=99999998, label="Минимальная цена"
     )
     max_price = forms.IntegerField(
-        initial=999999, min_value=100, max_value=99999999, label="Максимальная цена"
+        initial=9999999999,
+        min_value=100,
+        max_value=9999999999,
+        label="Максимальная цена",
     )
     min_interest_rate = forms.IntegerField(
         initial=0, min_value=0, max_value=90, label="Минимальная % ставка"
@@ -35,7 +45,11 @@ class FilterProductForm(forms.Form):
     max_interest_rate = forms.IntegerField(
         initial=100, min_value=5, max_value=100, label="Максимальная % ставка"
     )
-    period = forms.ChoiceField(choices=PERIODS, required=False)
+    period = forms.ChoiceField(choices=PERIODS, required=False, label="Период")
+
+    check_elastic = forms.BooleanField(
+        initial=False, required=False, label="Поиск через elastic"
+    )
 
     def clean_max_price(self):
         min = self.cleaned_data.get("min_price")

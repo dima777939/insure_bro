@@ -86,13 +86,16 @@ class MainResponseView(View):
 
 class FilterProductView(View):
     def get(
-            self,
-            request,
+        self,
+        request,
     ):
         form = FilterProductForm(request.GET)
         if form.is_valid():
             cd = form.cleaned_data
-            products = Filter.get_products_filter_main(cd)
+            if cd["check_elastic"]:
+                products = Filter.get_products_elasticsearch_main(cd)
+            else:
+                products = Filter.get_products_filter_main(cd)
             category = cd["category"]
             categories = Category.objects.all()
             response_form = ResponseForm()
