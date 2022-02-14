@@ -21,10 +21,12 @@ class ProductDocument(Document):
     class Django:
         model = Product
         fields = [
+            "id",
             "name",
             "price",
             "interest_rate",
             "period",
+            "date_create",
         ]
         related_models = [Category, InsuranceCompany]
 

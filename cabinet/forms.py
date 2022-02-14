@@ -34,7 +34,10 @@ class FilterProductForm(forms.Form):
         initial=0, min_value=0, max_value=99999998, label="Минимальная цена"
     )
     max_price = forms.IntegerField(
-        initial=999999, min_value=100, max_value=99999999, label="Максимальная цена"
+        initial=9999999999,
+        min_value=100,
+        max_value=9999999999,
+        label="Максимальная цена",
     )
     min_interest_rate = forms.IntegerField(
         initial=0, min_value=0, max_value=90, label="Минимальная % ставка"
@@ -42,7 +45,11 @@ class FilterProductForm(forms.Form):
     max_interest_rate = forms.IntegerField(
         initial=100, min_value=5, max_value=100, label="Максимальная % ставка"
     )
-    period = forms.ChoiceField(choices=PERIODS, required=False)
+    period = forms.ChoiceField(choices=PERIODS, required=False, label="Период")
+
+    check_elastic = forms.BooleanField(
+        initial=False, required=False, label="Поиск через elastic"
+    )
 
     def clean_max_price(self):
         min = self.cleaned_data.get("min_price")
