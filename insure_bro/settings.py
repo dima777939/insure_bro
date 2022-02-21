@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "cabinet.apps.CabinetConfig",
     "bootstrap4",
     "django_elasticsearch_dsl",
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -91,6 +92,13 @@ DATABASES = {
         "PASSWORD": os.environ.get("SQL_PASSWORD"),
         "HOST": os.environ.get("SQL_HOST"),
         "PORT": os.environ.get("SQL_PORT"),
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'insure_cache_table',
     }
 }
 
@@ -143,3 +151,12 @@ ELASTICSEARCH_DSL = {
         "hosts": "elasticsearch:9200"
     },
 }
+
+# send email
+EMAIL_HOST_USER = "insure.bro@mail.ru"
+
+# celery config
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER")
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_CACHE_BACKEND = "default"
+CELERY_TRACK_STARTED = True
