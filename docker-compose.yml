@@ -13,6 +13,7 @@ services:
     depends_on:
       - db
       - elasticsearch
+      - rabbitmq
   db:
     image: postgres:14.0
     volumes:
@@ -32,6 +33,36 @@ services:
       - "9300:9300"
     volumes:
       - es_data:/usr/share/es/data
+  rabbitmq:
+    container_name: "rabbit_mq"
+    image: rabbitmq:3.5-management
+    env_file:
+      - ./.env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  celery:
+    build: .
+    command: celery -A insure_bro worker -l info --logfile=logs/celery.log
+    container_name: celery_worker
+    volumes:
+      - .:/usr/src/insure_bro/
+    env_file:
+      - ./.env
+    depends_on:
+      - rabbitmq
+  celery-beat:
+    build: .
+    command: celery -A insure_bro beat -l info
+    volumes:
+      - .:/usr/src/insure_bro/
+    env_file:
+      - ./.env
+    depends_on:
+      - rabbitmq
 volumes:
   postgres_data:
   es_data:
+  celery_worker:
+  celery_beat:
+  rabbitmq:

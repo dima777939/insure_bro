@@ -5,6 +5,7 @@ from django.views import View
 from .forms import ProductForm, ResponseForm, FilterProductForm
 from .models import Product, Response, Category
 from .filter import Filter
+from .tasks import sendgrid_email
 
 
 class CreateProductView(View):
@@ -81,7 +82,10 @@ class MainResponseView(View):
             new_form = form.save(commit=False)
             new_form.product = product
             new_form.save()
+            sendgrid_email.delay(new_form.id)
             return redirect(reverse("cabinet:responses_list"))
+        form = ResponseForm()
+        return redirect(reverse("cabinet:responses_list"))
 
 
 class FilterProductView(View):
