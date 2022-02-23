@@ -6,7 +6,7 @@ app_name = "cabinet"
 urlpatterns = [
     path("", views.MainResponseView.as_view(), name="responses_list"),
     path(
-        "<int:product_id>/", views.MainResponseView.as_view(), name="post_response_form"
+        "<int:product_id>/", views.PageResponseView.as_view(), name="page_response_form"
     ),
     path("create/", views.CreateProductView.as_view(), name="create"),
     path("products/", views.ListProductView.as_view(), name="list_product"),

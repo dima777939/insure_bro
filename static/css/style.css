@@ -41,6 +41,7 @@ a {
 }
 
 .block_card {
+    display: flex;
     flex-direction: column;
     min-height: 750px;
     min-width: 700px;
@@ -88,7 +89,7 @@ h1, h2, h3 {
 .res_activ {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 }
 

@@ -57,7 +57,6 @@ class MainResponseView(View):
         category = None
         categories = Category.objects.all()
         products = Product.objects.all()
-        response_form = ResponseForm()
         form_filter = FilterProductForm()
         if category_slug:
             category = get_object_or_404(Category, slug=category_slug)
@@ -70,8 +69,22 @@ class MainResponseView(View):
                 "category": category,
                 "categories": categories,
                 "products": products,
-                "response_form": response_form,
                 "form_filter": form_filter,
+            },
+        )
+
+
+class PageResponseView(View):
+
+    def get(self, request, product_id):
+        product = get_object_or_404(Product, id=product_id)
+        response_form = ResponseForm()
+        return render(
+            request,
+            "cabinet/response_page.html",
+            {
+                "product": product,
+                "response_form": response_form
             },
         )
 
@@ -84,8 +97,8 @@ class MainResponseView(View):
             new_form.save()
             sendgrid_email.delay(new_form.id)
             return redirect(reverse("cabinet:responses_list"))
-        form = ResponseForm()
-        return redirect(reverse("cabinet:responses_list"))
+        form = ResponseForm(request.POST)
+        return render(request, "cabinet/response_page.html", {"response_form": form, "product": product})
 
 
 class FilterProductView(View):

@@ -15,6 +15,18 @@ class ResponseForm(forms.ModelForm):
         model = Response
         fields = ["first_name", "last_name", "phone", "email"]
 
+    def clean_phone(self):
+        phone = self.cleaned_data.get("phone")
+        if not phone.isdigit():
+            raise forms.ValidationError(
+                "Номер должен состоять из цифр"
+            )
+        if 8 > int(phone) > 16:
+            raise forms.ValidationError(
+                "Номер телефона должен быть от 8 до 16 цифр"
+            )
+        return phone
+
 
 class FilterProductForm(forms.Form):
     PERIODS = (("30", "1 мес"), ("60", "3 мес"), ("180", "6 мес"), ("365", "12 мес"))
