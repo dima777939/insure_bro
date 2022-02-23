@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load pluralize %}
 {% block title %}Страховые предложения{% endblock %}
 {% block content %}
     <h2>Активные предложения</h2>
@@ -9,11 +10,15 @@
 						<h2>Категория: {{ product.category|lower }}</h2>
 						<p>{{ product.name }}</p>
 						<div>
-							Страховой период {{ product.period }} дней.
-							Процентная ставка {{ product.interest_rate }} %.
+							Страховой период: {{ product.period }} дней.
+							Процентная ставка: {{ product.interest_rate }} %.
 						</div>
 						<div>
-							Стоимость {{ product.price }} руб.
+							Стоимость: {{ product.price }} руб.
+
+						</div>
+						<div>
+							Просмотры: {% if product.views == None %} 0 просмотров{% else %}{{ product.views }} просмотр{{ product.views|pluralize_views }}{% endif %} .
 						</div>
 					</div>
 				</li>

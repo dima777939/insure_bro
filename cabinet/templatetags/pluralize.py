@@ -7,6 +7,17 @@ register = template.Library()
 def pluralize_response(value, args=("е", "я", "й")):
     if not value:
         value = 0
+    ending = get_ending(value, args)
+    return ending
+
+
+@register.filter
+def pluralize_views(value, args=("", "а", "ов")):
+    ending = get_ending(value, args)
+    return ending
+
+
+def get_ending(value, args):
     number = abs(int(value))
     a = number % 10
     b = number % 100

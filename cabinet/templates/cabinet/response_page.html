@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block title %}
+    Предложение от компании {{ product.company.name }}
+{% endblock %}
+{% block content %}
+	<div class="block block_card align-items-center">
+		<div class="block card">
+			<h2>Категория: {{ product.category.name|lower }}</h2>
+			<p>Предложение от компании {{ product.company.name }}</p>
+			<p>{{ product.name }}</p>
+			<div>
+			   Страховой период {{ product.period }} дней.
+			   Процентная ставка {{ product.interest_rate }} %.
+			</div>
+			<div>
+			   Стоимость {{ product.price }} руб.
+			</div>
+		</div>
+		   <div class="card card-body">
+              <div class="block block_form">
+                 <h5>Оставьте свои контакты</h5>
+                 <form action="{% url "cabinet:page_response_form" product.id %}"
+					   method="post" class="form">
+					 {% csrf_token %}
+					 {% bootstrap_form response_form layout="inline" %}
+					 {% bootstrap_button content="Отправить" button_type="submit" button_class="btn btn-outline-secondary" size="md" %}
+				 </form>
+			  </div>
+		   </div>
+	   </div>
+{% endblock %}
