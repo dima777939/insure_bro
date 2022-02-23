@@ -48,12 +48,14 @@ class ListProductView(View):
         product = {}
         for product_queryset in products_queryset:
             product_views = r.get(f"product:{product_queryset.id}:views")
+            product_response = r.get(f"response:{product_queryset.id}")
             product["category"] = product_queryset.category.name
             product["name"] = product_queryset.name
             product["period"] = product_queryset.period
             product["interest_rate"] = product_queryset.interest_rate
             product["price"] = product_queryset.price
             product["views"] = product_views if product_views else 0
+            product["response"] = product_response if product_response else 0
             products.append(product.copy())
         return products
 
@@ -119,7 +121,8 @@ class PageResponseView(View):
             new_form = form.save(commit=False)
             new_form.product = product
             new_form.save()
-            sendgrid_email.delay(new_form.id)
+            # sendgrid_email.delay(new_form.id)
+            r.incr(f"response:{product_id}")
             return redirect(reverse("cabinet:responses_list"))
         form = ResponseForm(request.POST)
         return render(request, "cabinet/response_page.html", {"response_form": form, "product": product})

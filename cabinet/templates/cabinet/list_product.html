@@ -18,7 +18,10 @@
 
 						</div>
 						<div>
-							Просмотры: {% if product.views == None %} 0 просмотров{% else %}{{ product.views }} просмотр{{ product.views|pluralize_views }}{% endif %} .
+							Просмотры: {{ product.views }} просмотр{{ product.views|pluralize_views }} .
+						</div>
+						<div>
+							Отклики: {{ product.response }} отклик{{ product.response|pluralize_views }} .
 						</div>
 					</div>
 				</li>
