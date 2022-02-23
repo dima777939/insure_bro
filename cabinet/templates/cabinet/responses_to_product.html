@@ -42,22 +42,10 @@
                                 Стоимость {{ product.price }} руб.
                                 <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapseExample{{ product.id }}" aria-expanded="false"
-                                        aria-controls="collapseExample">
+                                        aria-controls="collapseExample"
+										onclick="window.location='{% url "cabinet:page_response_form" product.id %}'">
                                     Купить предложение
                                 </button>
-                                <div class="collapse" id="collapseExample{{ product.id }}">
-                                    <div class="card card-body">
-                                        <div class="block block_form">
-                                            <h5>Оставьте свои контакты</h5>
-                                            <form action="{% url "cabinet:post_response_form" product.id %}"
-                                                  method="post" class="form">
-                                                {% csrf_token %}
-                                                {% bootstrap_form response_form layout="inline" %}
-                                                {% bootstrap_button content="Отправить" button_type="submit" button_class="btn btn-outline-secondary" size="md" %}
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </li>

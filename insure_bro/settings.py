@@ -160,3 +160,8 @@ CELERY_BROKER_URL = os.environ.get("CELERY_BROKER")
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_CACHE_BACKEND = "default"
 CELERY_TRACK_STARTED = True
+
+# redis settings
+REDIS_HOST = "redis"
+REDIS_PORT = 6379
+REDIS_DB = 0

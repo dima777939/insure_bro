@@ -60,9 +60,21 @@ services:
       - ./.env
     depends_on:
       - rabbitmq
+      - web
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis
+    command: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - usr/src/redis/
+    depends_on:
+      - web
 volumes:
   postgres_data:
   es_data:
   celery_worker:
   celery_beat:
   rabbitmq:
+  redis:

@@ -1,3 +1,4 @@
+import redis
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -5,7 +6,13 @@ from django.views import View
 from .forms import ProductForm, ResponseForm, FilterProductForm
 from .models import Product, Response, Category
 from .filter import Filter
+from django.conf import settings
 from .tasks import sendgrid_email
+
+r = redis.StrictRedis(host=settings.REDIS_HOST,
+                      port=settings.REDIS_PORT,
+                      db=settings.REDIS_DB,
+                      decode_responses=True)
 
 
 class CreateProductView(View):
@@ -28,11 +35,29 @@ class ListProductView(View):
     def get(self, request):
         company = request.user
         products = Product.objects.filter(company_id=company.pk)
+        products = self.get_products_with_views(products)
         return render(
             request,
             "cabinet/list_product.html",
             {"space": "cabinet", "products": products},
         )
+
+    @staticmethod
+    def get_products_with_views(products_queryset):
+        products = []
+        product = {}
+        for product_queryset in products_queryset:
+            product_views = r.get(f"product:{product_queryset.id}:views")
+            product_response = r.get(f"response:{product_queryset.id}")
+            product["category"] = product_queryset.category.name
+            product["name"] = product_queryset.name
+            product["period"] = product_queryset.period
+            product["interest_rate"] = product_queryset.interest_rate
+            product["price"] = product_queryset.price
+            product["views"] = product_views if product_views else 0
+            product["response"] = product_response if product_response else 0
+            products.append(product.copy())
+        return products
 
 
 class ListResponseView(View):
@@ -57,7 +82,6 @@ class MainResponseView(View):
         category = None
         categories = Category.objects.all()
         products = Product.objects.all()
-        response_form = ResponseForm()
         form_filter = FilterProductForm()
         if category_slug:
             category = get_object_or_404(Category, slug=category_slug)
@@ -70,8 +94,23 @@ class MainResponseView(View):
                 "category": category,
                 "categories": categories,
                 "products": products,
-                "response_form": response_form,
                 "form_filter": form_filter,
+            },
+        )
+
+
+class PageResponseView(View):
+
+    def get(self, request, product_id):
+        product = get_object_or_404(Product, id=product_id)
+        response_form = ResponseForm()
+        response_views = r.incr(f"product:{product_id}:views")
+        return render(
+            request,
+            "cabinet/response_page.html",
+            {
+                "product": product,
+                "response_form": response_form
             },
         )
 
@@ -82,10 +121,11 @@ class MainResponseView(View):
             new_form = form.save(commit=False)
             new_form.product = product
             new_form.save()
-            sendgrid_email.delay(new_form.id)
+            # sendgrid_email.delay(new_form.id)
+            r.incr(f"response:{product_id}")
             return redirect(reverse("cabinet:responses_list"))
-        form = ResponseForm()
-        return redirect(reverse("cabinet:responses_list"))
+        form = ResponseForm(request.POST)
+        return render(request, "cabinet/response_page.html", {"response_form": form, "product": product})
 
 
 class FilterProductView(View):
