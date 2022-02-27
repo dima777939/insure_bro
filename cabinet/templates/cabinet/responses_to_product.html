@@ -22,28 +22,24 @@
         <div>
             <ul>
                 <li class="block card">
-                    {% with products.count as total_products %}
-                        <h2>Найдено {{ total_products }} предложени{{ total_products|pluralize_response }}</h2>
-                    {% endwith %}
+                        <h2>Найдено {{ products_count }} предложени{{ products_count|pluralize_response }}</h2>
                 </li>
             </ul>
             <ul>
                 {% for product in products %}
                     <li>
                         <div class="block card">
-                            <h2>Категория: {{ product.category.name|lower }}</h2>
-                            <p>Предложение от компании {{ product.company.name }}</p>
-                            <p>{{ product.name }}</p>
+                            <h2>Категория: {{ product.product.category.name|lower }}</h2>
+                            <p>Предложение от компании {{ product.product.company.name }}</p>
+                            <p>{{ product.product.name }}</p>
                             <div>
-                                Страховой период {{ product.period }} дней.
+                                Страховой период {{ product.product.period }} дней.
                                 Процентная ставка {{ product.interest_rate }} %.
                             </div>
                             <div>
-                                Стоимость {{ product.price }} руб.
-                                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseExample{{ product.id }}" aria-expanded="false"
-                                        aria-controls="collapseExample"
-										onclick="window.location='{% url "cabinet:page_response_form" product.id %}'">
+                                Стоимость {{ product.product.price }} руб.
+                                <button class="btn btn-outline-secondary" type="button"
+										onclick="window.location='{{ product.url }}'">
                                     Купить предложение
                                 </button>
                             </div>
@@ -54,7 +50,6 @@
         </div>
         <div class="block form-filter">
             <form action="{% url "cabinet:filter_product" %}" method="get">
-                {% csrf_token %}
                 {% bootstrap_label content="Выберите подходящие параметры" %}
                 {% bootstrap_field form_filter.company required=False %}
                 {% bootstrap_field form_filter.category required=False %}
