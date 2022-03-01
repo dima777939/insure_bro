@@ -45,3 +45,6 @@ class RedisData:
         products = Product.objects.all()
         for product in products:
             self.add_key_product_url(product)
+
+    def delete_product_key(self, name,  product_id):
+        self._r.delete(f"{name}:{product_id}")

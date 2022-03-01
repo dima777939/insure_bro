@@ -1,4 +1,3 @@
-import redis
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -48,15 +47,35 @@ class ListResponseView(View):
         responses = Response.objects.filter(
             product__company_id=company.pk, finished=False
         )
-        if completed:
+        button = "active"
+        if completed == "completed":
             responses = Response.objects.filter(
                 product__company_id=company.pk, finished=True
             )
+            button = "completed"
         return render(
             request,
             "cabinet/responses_to_company.html",
-            {"space": "cabinet", "responses": responses},
+            {"space": "cabinet", "responses": responses, "button": button},
         )
+
+class ResponseAction(View):
+    def get(self, request, response_id, delete=None):
+        if request.user.is_authenticated:
+            company_id = request.user.id
+            response = get_object_or_404(Response, id=response_id)
+            response_company_id = response.product.company.id
+            if company_id == response_company_id:
+                if delete == "delete":
+                    response.delete()
+                    r.delete_product_key("response", response_id)
+                    return redirect(reverse("cabinet:responses_completed", args=["completed"]))
+                else:
+                    Response.objects.filter(id=response_id).update(finished=True)
+                    return redirect(reverse("cabinet:responses_active"))
+            return redirect(reverse("cabinet:responses_list"))
+
+
 
 
 class MainResponseView(View):

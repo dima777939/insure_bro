@@ -17,6 +17,8 @@ urlpatterns = [
         views.ListResponseView.as_view(),
         name="responses_completed",
     ),
+    path("responses/action/<int:response_id>/", views.ResponseAction.as_view(), name="response_finished"),
+    path("responses/action/<int:response_id>/<str:delete>/", views.ResponseAction.as_view(), name="response_delete"),
     path(
         "<slug:category_slug>/",
         views.MainResponseView.as_view(),
