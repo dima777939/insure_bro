@@ -1,0 +1,17 @@
+
+
+[2022-03-02 11:06:10,290: ERROR/MainProcess] consumer: Cannot connect to amqp://insure_bro:**@rabbitmq:5672//: [Errno 111] Connection refused.
+Trying again in 2.00 seconds...
+
+[2022-03-02 11:06:12,322: ERROR/MainProcess] consumer: Cannot connect to amqp://insure_bro:**@rabbitmq:5672//: [Errno 111] Connection refused.
+Trying again in 4.00 seconds...
+
+[2022-03-02 11:06:16,342: ERROR/MainProcess] consumer: Cannot connect to amqp://insure_bro:**@rabbitmq:5672//: [Errno 111] Connection refused.
+Trying again in 6.00 seconds...
+
+[2022-03-02 11:06:22,363: INFO/MainProcess] Connected to amqp://insure_bro:**@rabbitmq:5672//
+[2022-03-02 11:06:22,385: INFO/MainProcess] mingle: searching for neighbors
+[2022-03-02 11:06:23,420: INFO/MainProcess] mingle: all alone
+[2022-03-02 11:06:23,440: WARNING/MainProcess] /usr/local/lib/python3.9/site-packages/celery/fixups/django.py:202: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2022-03-02 11:06:23,441: INFO/MainProcess] celery@54615839605a ready.
