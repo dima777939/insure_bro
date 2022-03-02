@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from django.views.generic import RedirectView
 
 urlpatterns = [
+    path("", RedirectView.as_view(url="cabinet/")),
     path("admin/", admin.site.urls),
     path("account/", include("account.urls", namespace="account")),
     path("cabinet/", include("cabinet.urls", namespace="cabinet")),

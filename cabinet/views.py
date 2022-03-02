@@ -59,6 +59,7 @@ class ListResponseView(View):
             {"space": "cabinet", "responses": responses, "button": button},
         )
 
+
 class ResponseAction(View):
     def get(self, request, response_id, delete=None):
         if request.user.is_authenticated:
@@ -74,8 +75,6 @@ class ResponseAction(View):
                     Response.objects.filter(id=response_id).update(finished=True)
                     return redirect(reverse("cabinet:responses_active"))
             return redirect(reverse("cabinet:responses_list"))
-
-
 
 
 class MainResponseView(View):
