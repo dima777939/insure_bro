@@ -35,9 +35,15 @@
                         <div class="mt-1">
                             email: {{ response.email }}
                         </div>
-                        <button class="btn btn-outline-secondary btn-sm mt-2" type="button" onclick="window.location='#'">
-                            Отклик обработан
-                        </button>
+						{% if button == "active" %}
+							<button class="btn btn-outline-secondary btn-sm mt-2" type="button" onclick="window.location='{% url "cabinet:response_finished"  response.id%}'">
+								Отклик обработан
+							</button>
+						{% elif button == "completed" %}
+							<button class="btn btn-outline-secondary btn-sm mt-2" type="button" onclick="window.location='{% url "cabinet:response_delete" response.id "delete" %}'">
+								Удалить запись
+							</button>
+						{% endif %}
                     </div>
 				</li>
 			{% endfor %}

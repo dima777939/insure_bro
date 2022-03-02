@@ -7,14 +7,14 @@
 			{% for product in products %}
 				<li >
 					<div class="block card">
-						<h2>Категория: {{ product.category|lower }}</h2>
-						<p>{{ product.name }}</p>
+						<h2>Категория: {{ product.product.category|lower }}</h2>
+						<p>{{ product.product.name }}</p>
 						<div>
-							Страховой период: {{ product.period }} дней.
-							Процентная ставка: {{ product.interest_rate }} %.
+							Страховой период: {{ product.product.period }} дней.
+							Процентная ставка: {{ product.product.interest_rate }} %.
 						</div>
 						<div>
-							Стоимость: {{ product.price }} руб.
+							Стоимость: {{ product.product.price }} руб.
 
 						</div>
 						<div>
