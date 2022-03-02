@@ -17,7 +17,7 @@
 * Elasticsearch
 * Celery
 * RabbitMQ
-* Celery
+* Redis
 
 ## Основные команды
 
@@ -51,7 +51,7 @@
 
 после загрузки фикстур необходимо добавить url на страницу просмотра информации продукта в Redis
 
-```docker-compose exec web  python /usr/src/insure_bro/manage.py loaddata mydata.json```
+```docker-compose exec web  python /usr/src/insure_bro/manage.py add_redis_url_key```
 
 Также становятся доступными учётные записи с логином
 
