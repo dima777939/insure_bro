@@ -77,6 +77,20 @@ class ResponseAction(View):
             return redirect(reverse("cabinet:responses_list"))
 
 
+class ProductDeleteView(View):
+    def get(self, request, product_id):
+        if request.user.is_authenticated:
+            company_id = request.user.id
+            product = get_object_or_404(Product, id=product_id)
+            product_company_id = product.company.id
+            if company_id == product_company_id:
+                product.delete()
+                r.delete_product_key("product_views", product_id)
+                r.delete_product_key("product_url", product_id)
+                return redirect(reverse("cabinet:list_product"))
+            return redirect(reverse("cabinet:responses_list"))
+
+
 class MainResponseView(View):
     def get(self, request, category_slug=None):
         category = None
