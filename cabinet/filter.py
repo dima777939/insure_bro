@@ -44,7 +44,7 @@ class Filter:
 
     @staticmethod
     def get_products_elasticsearch_main(cd):
-        search = ProductDocument.search()
+        search = ProductDocument.search().extra(size=100)
         company = cd["company"]
         category = cd["category"]
         name = cd["name"]
