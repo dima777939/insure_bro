@@ -44,7 +44,7 @@ class Filter:
 
     @staticmethod
     def get_products_elasticsearch_main(cd):
-        search = ProductDocument.search()
+        search = ProductDocument.search().extra(size=100)
         company = cd["company"]
         category = cd["category"]
         name = cd["name"]
@@ -53,14 +53,14 @@ class Filter:
         min_interest_rate = cd["min_interest_rate"]
         max_interest_rate = cd["max_interest_rate"]
 
-        products = (
-            search.filter("range", price={"gte": min_price, "lte": max_price}).filter(
-                "range",
-                interest_rate={
-                    "gte": min_interest_rate,
-                    "lte": max_interest_rate,
-                },
-            )
+        products = search.filter(
+            "range", price={"gte": min_price, "lte": max_price}
+        ).filter(
+            "range",
+            interest_rate={
+                "gte": min_interest_rate,
+                "lte": max_interest_rate,
+            },
         )
         if name:
             products = products.query(

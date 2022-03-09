@@ -23,6 +23,12 @@
 						<div>
 							Отклики: {{ product.response }} отклик{{ product.response|pluralize_views }} .
 						</div>
+						<div>
+							<button class="btn btn-outline-secondary btn-sm mt-2" type="button"
+									onclick="window.location='{% url "cabinet:delete_product"  product.product.id%}'">
+								Удалить предложение
+							</button>
+						</div>
 					</div>
 				</li>
 			{% endfor %}

@@ -40,7 +40,7 @@ class CompanyLoginView(View):
         if company is not None:
             if company.is_active:
                 login(request, company)
-                return redirect(reverse("account:register"))
+                return redirect(reverse("cabinet:list_product"))
                 # return redirect(reverse('mane_page:mane_page'))
             else:
                 return HttpResponse("Аккаунт не активен")

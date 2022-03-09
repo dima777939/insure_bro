@@ -70,10 +70,26 @@ class ResponseAction(View):
                 if delete == "delete":
                     response.delete()
                     r.delete_product_key("response", response_id)
-                    return redirect(reverse("cabinet:responses_completed", args=["completed"]))
+                    return redirect(
+                        reverse("cabinet:responses_completed", args=["completed"])
+                    )
                 else:
                     Response.objects.filter(id=response_id).update(finished=True)
                     return redirect(reverse("cabinet:responses_active"))
+            return redirect(reverse("cabinet:responses_list"))
+
+
+class ProductDeleteView(View):
+    def get(self, request, product_id):
+        if request.user.is_authenticated:
+            company_id = request.user.id
+            product = get_object_or_404(Product, id=product_id)
+            product_company_id = product.company.id
+            if company_id == product_company_id:
+                product.delete()
+                r.delete_product_key("product_views", product_id)
+                r.delete_product_key("product_url", product_id)
+                return redirect(reverse("cabinet:list_product"))
             return redirect(reverse("cabinet:responses_list"))
 
 

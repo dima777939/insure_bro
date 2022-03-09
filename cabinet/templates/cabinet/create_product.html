@@ -2,13 +2,17 @@
 {% load bootstrap4 %}
 {% block title %}Создать страховое предложение{% endblock %}
 {% block content %}
-	<div class="block block_form">
-		<h1>Новое страховое предложение</h1>
-		<form action="." method="post" class="form">
-			{% csrf_token %}
-            {% bootstrap_form form layout="inline"%}
-			{% bootstrap_button content="Создать" button_type="submit" button_class="btn btn-outline-secondary" size="md" %}
-		</form>
+	<div class="create_form">
+		<div class="card card-body">
+			<div class="block block_form">
+		  		<h1>Новое страховое предложение</h1>
+		  		<form action="." method="post" class="form">
+			  		{% csrf_token %}
+             		{% bootstrap_form form layout="inline"%}
+			  		{% bootstrap_button content="Создать" button_type="submit" button_class="btn btn-outline-secondary" size="md" %}
+		  		</form>
+			</div>
+		</div>
 	</div>
     {% include 'cabinet/off_canvas.html' %}
 {% endblock %}
