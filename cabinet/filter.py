@@ -53,14 +53,14 @@ class Filter:
         min_interest_rate = cd["min_interest_rate"]
         max_interest_rate = cd["max_interest_rate"]
 
-        products = (
-            search.filter("range", price={"gte": min_price, "lte": max_price}).filter(
-                "range",
-                interest_rate={
-                    "gte": min_interest_rate,
-                    "lte": max_interest_rate,
-                },
-            )
+        products = search.filter(
+            "range", price={"gte": min_price, "lte": max_price}
+        ).filter(
+            "range",
+            interest_rate={
+                "gte": min_interest_rate,
+                "lte": max_interest_rate,
+            },
         )
         if name:
             products = products.query(

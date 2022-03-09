@@ -18,13 +18,9 @@ class ResponseForm(forms.ModelForm):
     def clean_phone(self):
         phone = self.cleaned_data.get("phone")
         if not phone.isdigit():
-            raise forms.ValidationError(
-                "Номер должен состоять из цифр"
-            )
+            raise forms.ValidationError("Номер должен состоять из цифр")
         if 8 > int(phone) > 16:
-            raise forms.ValidationError(
-                "Номер телефона должен быть от 8 до 16 цифр"
-            )
+            raise forms.ValidationError("Номер телефона должен быть от 8 до 16 цифр")
         return phone
 
 

@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}Регистрация{% endblock %}
 {% block content %}
-    <h1>Добро пожаловать!</h1>
-    <p>
-    Компания {{ new_company.name|upper }} зарегистрирована на платформе.
-    <span> Теперь можно <a href="{% url 'account:login' %}">авторизоватся</a> на сайте</span>
-    </p>
+
+	<div class="create_form">
+	  <h1>Добро пожаловать!</h1><br><br><br>
+		<div class="block card">
+    		<h2>Компания {{ new_company.name|upper }} зарегистрирована на платформе.</h2><br>
+    		<h3> Теперь можно <a href="{% url 'account:login' %}">авторизоваться</a> на сайте</h3>
+		</div>
+	</div>
 {% endblock %}

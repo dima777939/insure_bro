@@ -70,7 +70,9 @@ class ResponseAction(View):
                 if delete == "delete":
                     response.delete()
                     r.delete_product_key("response", response_id)
-                    return redirect(reverse("cabinet:responses_completed", args=["completed"]))
+                    return redirect(
+                        reverse("cabinet:responses_completed", args=["completed"])
+                    )
                 else:
                     Response.objects.filter(id=response_id).update(finished=True)
                     return redirect(reverse("cabinet:responses_active"))

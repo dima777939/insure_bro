@@ -1,13 +1,18 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
 {% block title %}Регистрация{% endblock %}
 {% block content %}
- <div>
- 	<h1>Регистрация</h1>
-    <p>Регистрация нового пользователя</p>
-	 <form action="." method="post">
-		 {% csrf_token %}
-		 {{ reg_form.as_table }}
-		 <input type="submit" name="Регистрация">
-	 </form>
- </div>
+	<div class="create_form">
+	  <div class="card card-body">
+        <div class="block block_form">
+			<h1>Регистрация</h1>
+    		<h5>Регистрация нового пользователя</h5>
+            <form action="." method="post" class="form">
+				{% csrf_token %}
+				{% bootstrap_form reg_form layout="inline" %}
+				{% bootstrap_button content="Регистрация" button_type="submit" button_class="btn btn-outline-secondary" size="md" %}
+			</form>
+		</div>
+	  </div>
+	</div>
 {% endblock %}

@@ -1,13 +1,20 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
 {% block title %}
     Авторизация
 {% endblock %}
 {% block content %}
-	<h1>Авторизация</h1>
-    <p>Введите логин и пароль</p>
-	<form action="." method="post">
-	{% csrf_token %}
-	{{ form.as_table }}
-		<input type="submit" name="Авторизация">
-	</form>
+  <div class="create_form">
+	<div class="card card-body">
+        <div class="block block_form">
+        	<h1>Авторизация</h1>
+			<h5>Введите логин и пароль</h5>
+            <form action="." method="post" class="form">
+				{% csrf_token %}
+				{% bootstrap_form form layout="inline" %}
+				{% bootstrap_button content="Вход" button_type="submit" button_class="btn btn-outline-secondary" size="md" %}
+			</form>
+		</div>
+	</div>
+  </div>
 {% endblock %}

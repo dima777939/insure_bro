@@ -3,10 +3,10 @@
 {% block content %}
     <ul class=" nav nav-tabs navbar-expand-lg">
       <li class="nav-item justify-content-center">
-          <a class="nav-link active lh-sm"  href="{% url "cabinet:responses_active" %}">Активные отклики</a>
+          <a {% if button == "active" %}class="nav-link active" {% else %}class="nav-link"{% endif %}  href="{% url "cabinet:responses_active" %}">Активные отклики</a>
       </li>
       <li class="nav-item">
-          <a class="nav-link" href="{% url "cabinet:responses_completed" "completed" %}">Обработанные отклики</a>
+          <a {% if button == "completed" %} class="nav-link active" {% else %} class="nav-link" {% endif %} href="{% url "cabinet:responses_completed" "completed" %}">Обработанные отклики</a>
       </li>
     </ul>
     <h2></h2>
