@@ -153,7 +153,11 @@ ELASTICSEARCH_DSL = {
 }
 
 # send email
-EMAIL_HOST_USER = "insure.bro@mail.ru"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 # celery config
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER")
