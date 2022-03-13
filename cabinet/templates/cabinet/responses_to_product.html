@@ -5,6 +5,14 @@
     {% if category %}{{ category.name }}{% else %}Страховые предложения{% endif %}
 {% endblock %}
 {% block content %}
+	{% if messages %}
+		{% for message in messages %}
+		    <div class="alert alert-success alert-dismissible" role="alert">
+  			    {{ message|safe }}
+			    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		    </div>
+	    {% endfor %}
+	{% endif %}
     <ul class=" nav nav-tabs navbar-expand-lg">
         <li class="nav-item justify-content-center">
             <a {% if not category %}class="nav-link active lh-sm" {% else %} class="nav-link"{% endif %}

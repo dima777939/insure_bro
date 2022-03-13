@@ -1,4 +1,7 @@
 import os
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from datetime import datetime
 from django.conf import settings
 from sendgrid import SendGridAPIClient, TemplateId, DynamicTemplateData
@@ -9,37 +12,13 @@ from .models import Response
 from insure_bro.celery import app
 
 
-@app.task(name="sendgrid")
-def sendgrid_email(response_id):
+@app.task(name="sendmail", autoretry_for=(Exception,), retry_kwargs={'max_retries': 5, 'countdown': 10})
+def send_email(response_id):
     response = get_object_or_404(Response, id=response_id)
-    to_email = response.product.company.email
-    subject = (
-        f"Отклик на страховое предложение в категории {response.product.category.name}"
-    )
-    data = {
-        "category": response.product.category.name,
-        "name_product": response.product.name,
-        "price": str(response.product.price),
-        "interest_rate": response.product.interest_rate,
-        "period": response.product.period,
-        "first_name": response.first_name,
-        "last_name": response.last_name,
-        "phone": response.phone,
-        "email": response.email,
-        "date": f"{datetime.today().year}.{datetime.today().month}.{datetime.today().day}",
-    }
-    message = Mail(
-        from_email=settings.EMAIL_HOST_USER,
-        to_emails=to_email,
-        subject=subject,
-    )
-    message.template_id = TemplateId("d-976e00de6c504b29aa889ee9c224c997")
-    message.dynamic_template_data = DynamicTemplateData(data)
-    try:
-        sg = SendGridAPIClient(api_key=os.environ.get("SENDGRID_API_KEY"))
-        response = sg.client.mail.send.post(request_body=message.get())
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-    except Exception as e:
-        print(e.args)
+    email_company = response.product.company.email
+    date = f"{datetime.today().day}.{datetime.today().month}.{datetime.today().year}"
+    subject = "Пока тест"
+    html_message = render_to_string("cabinet/email.html", {"response": response, "date": date})
+    message = strip_tags(html_message)
+    message = "Возьмите страховку"
+    send_mail(subject, message, settings.EMAIL_HOST_USER, [email_company], html_message=html_message)

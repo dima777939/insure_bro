@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
+from django.contrib import messages
 
 from .forms import ProductForm, ResponseForm, FilterProductForm
 from .models import Product, Response, Category
 from .filter import Filter
-from .tasks import sendgrid_email
+from .tasks import send_email
 from .redis_data import RedisData
 
 r = RedisData()
@@ -43,21 +44,23 @@ class ListProductView(View):
 
 class ListResponseView(View):
     def get(self, request, completed=None):
-        company = request.user
-        responses = Response.objects.filter(
-            product__company_id=company.pk, finished=False
-        )
-        button = "active"
-        if completed == "completed":
+        if request.user.is_authenticated:
+            company = request.user
             responses = Response.objects.filter(
-                product__company_id=company.pk, finished=True
+                product__company_id=company.pk, finished=False
             )
-            button = "completed"
-        return render(
-            request,
-            "cabinet/responses_to_company.html",
-            {"space": "cabinet", "responses": responses, "button": button},
-        )
+            button = "active"
+            if completed == "completed":
+                responses = Response.objects.filter(
+                    product__company_id=company.pk, finished=True
+                )
+                button = "completed"
+            return render(
+                request,
+                "cabinet/responses_to_company.html",
+                {"space": "cabinet", "responses": responses, "button": button},
+            )
+        return redirect(reverse("account:login"))
 
 
 class ResponseAction(View):
@@ -135,8 +138,9 @@ class PageResponseView(View):
             new_form = form.save(commit=False)
             new_form.product = product
             new_form.save()
-            sendgrid_email.delay(new_form.id)
+            send_email.delay(new_form.id)
             r.incr_key("response", product_id)
+            messages.success(request, "Ваша заявка отправлена. С вами свяжется менеджер компании")
             return redirect(reverse("cabinet:responses_list"))
         form = ResponseForm(request.POST)
         return render(
