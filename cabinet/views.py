@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
+from django.contrib import messages
 
 from .forms import ProductForm, ResponseForm, FilterProductForm
 from .models import Product, Response, Category
@@ -139,6 +140,7 @@ class PageResponseView(View):
             new_form.save()
             send_email.delay(new_form.id)
             r.incr_key("response", product_id)
+            messages.success(request, "Ваша заявка отправлена. С вами свяжется менеджер компании")
             return redirect(reverse("cabinet:responses_list"))
         form = ResponseForm(request.POST)
         return render(
