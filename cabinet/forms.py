@@ -5,17 +5,28 @@ from account.models import InsuranceCompany
 
 
 class ProductForm(forms.ModelForm):
+    """
+    Форма для создания продукта
+    """
+
     class Meta:
         model = Product
         fields = ["category", "name", "price", "interest_rate", "period"]
 
 
 class ResponseForm(forms.ModelForm):
+    """
+    Форма для отклика на продукт
+    """
+
     class Meta:
         model = Response
         fields = ["first_name", "last_name", "phone", "email"]
 
     def clean_phone(self):
+        """
+        Валидация поля 'phone'
+        """
         phone = self.cleaned_data.get("phone")
         if not phone.isdigit():
             raise forms.ValidationError("Номер должен состоять из цифр")
@@ -25,6 +36,10 @@ class ResponseForm(forms.ModelForm):
 
 
 class FilterProductForm(forms.Form):
+    """
+    Форма фильтра
+    """
+
     PERIODS = (("30", "1 мес"), ("60", "3 мес"), ("180", "6 мес"), ("365", "12 мес"))
 
     company = forms.ModelChoiceField(
@@ -38,20 +53,17 @@ class FilterProductForm(forms.Form):
     name = forms.CharField(
         min_length=3, max_length=20, required=False, label="Описание"
     )
-    min_price = forms.IntegerField(
-        initial=0, min_value=0, max_value=99999998, label="Минимальная цена"
-    )
+    min_price = forms.IntegerField(initial=0, min_value=0, label="Минимальная цена")
     max_price = forms.IntegerField(
         initial=9999999999,
-        min_value=100,
         max_value=9999999999,
         label="Максимальная цена",
     )
     min_interest_rate = forms.IntegerField(
-        initial=0, min_value=0, max_value=90, label="Минимальная % ставка"
+        initial=0, min_value=0, label="Минимальная % ставка"
     )
     max_interest_rate = forms.IntegerField(
-        initial=100, min_value=5, max_value=100, label="Максимальная % ставка"
+        initial=100, max_value=100, label="Максимальная % ставка"
     )
     period = forms.ChoiceField(choices=PERIODS, required=False, label="Период")
 
@@ -60,6 +72,9 @@ class FilterProductForm(forms.Form):
     )
 
     def clean_max_price(self):
+        """
+        Валидация поля 'max_price'
+        """
         min = self.cleaned_data.get("min_price")
         max = self.cleaned_data.get("max_price")
         if max < min:
@@ -69,6 +84,9 @@ class FilterProductForm(forms.Form):
         return max
 
     def clean_max_interest_rate(self):
+        """
+        Валидация поля 'max_interest_rate'
+        """
         max = self.cleaned_data.get("max_interest_rate")
         min = self.cleaned_data.get("min_interest_rate")
         if max < min:

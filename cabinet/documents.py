@@ -7,6 +7,10 @@ from account.models import InsuranceCompany
 
 @registry.register_document
 class ProductDocument(Document):
+    """
+    Регистрирует модель таблицы в elasticsearch
+    """
+
     company = fields.ObjectField(
         properties={"id": fields.IntegerField(), "name": fields.TextField()}
     )

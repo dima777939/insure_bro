@@ -3,8 +3,17 @@ from .documents import ProductDocument
 
 
 class Filter:
+    """
+    Фильтрация продуктов по введенным параметрам
+    """
+
     @staticmethod
     def get_products_filter_main(cd):
+        """
+        Использует Django ORM для фильтрации
+        :param cd:
+        :return:
+        """
         company = cd["company"]
         category = cd["category"]
         min_price = cd["min_price"]
@@ -44,6 +53,11 @@ class Filter:
 
     @staticmethod
     def get_products_elasticsearch_main(cd):
+        """
+        Использует elasticsearch для фильтрации
+        :param cd:
+        :return:
+        """
         search = ProductDocument.search().extra(size=100)
         company = cd["company"]
         category = cd["category"]

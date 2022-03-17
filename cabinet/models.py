@@ -6,6 +6,10 @@ from account.models import InsuranceCompany
 
 
 class Category(models.Model):
+    """
+    Модель таблицы в базе данных с категориями продуктов
+    """
+
     name = models.CharField(max_length=20)
     slug = models.SlugField(max_length=20)
 
@@ -21,6 +25,9 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    """
+    Модель таблицы в базе данных для продуктов компании
+    """
 
     PERIODS = (("30", "1 мес"), ("60", "3 мес"), ("180", "6 мес"), ("365", "12 мес"))
     company = models.ForeignKey(
@@ -50,6 +57,9 @@ class Product(models.Model):
 
 
 class Response(models.Model):
+    """
+    Модель таблицы в базе данных для откликов на продукты компании
+    """
 
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, verbose_name="Вид страховки"

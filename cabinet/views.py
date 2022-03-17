@@ -13,6 +13,10 @@ r = RedisData()
 
 
 class CreateProductView(View):
+    """
+    Представление для создания продукта
+    """
+
     def get(self, request):
         form = ProductForm()
         return render(
@@ -26,11 +30,16 @@ class CreateProductView(View):
             new_form.company = request.user
             new_form.save()
             product = get_object_or_404(Product, id=new_form.id)
+            # добавление url продукта в Redis
             r.add_key_product_url(product)
             return redirect(reverse("cabinet:create"))
 
 
 class ListProductView(View):
+    """
+    Представление для вывода, в кабинете, списка продуктов компании
+    """
+
     def get(self, request):
         company = request.user
         products = Product.objects.filter(company_id=company.pk)
@@ -43,6 +52,10 @@ class ListProductView(View):
 
 
 class ListResponseView(View):
+    """
+    Представление для вывода, в кабинете, списка откликов на продукты компании
+    """
+
     def get(self, request, completed=None):
         if request.user.is_authenticated:
             company = request.user
@@ -64,6 +77,10 @@ class ListResponseView(View):
 
 
 class ResponseAction(View):
+    """
+    Представление для обновления статуса отклика или его удаления
+    """
+
     def get(self, request, response_id, delete=None):
         if request.user.is_authenticated:
             company_id = request.user.id
@@ -83,6 +100,10 @@ class ResponseAction(View):
 
 
 class ProductDeleteView(View):
+    """
+    Представление для удаления продукта компании
+    """
+
     def get(self, request, product_id):
         if request.user.is_authenticated:
             company_id = request.user.id
@@ -97,6 +118,10 @@ class ProductDeleteView(View):
 
 
 class MainResponseView(View):
+    """
+    Представление для вывода списка предложений от всех компаний
+    """
+
     def get(self, request, category_slug=None):
         category = None
         categories = Category.objects.all()
@@ -121,9 +146,14 @@ class MainResponseView(View):
 
 
 class PageResponseView(View):
+    """
+    Представление для вывода страницы продукта с формой отклика
+    """
+
     def get(self, request, product_id):
         product = get_object_or_404(Product, id=product_id)
         response_form = ResponseForm()
+        # увеличения счётчика просмотров на 1-н в Redis
         r.incr_key("product_views", product_id)
         return render(
             request,
@@ -138,9 +168,13 @@ class PageResponseView(View):
             new_form = form.save(commit=False)
             new_form.product = product
             new_form.save()
+            # отправка email используя Celery
             send_email.delay(new_form.id)
+            # увеличения счётчика откликов на 1-н в Redis
             r.incr_key("response", product_id)
-            messages.success(request, "Ваша заявка отправлена. С вами свяжется менеджер компании")
+            messages.success(
+                request, "Ваша заявка отправлена. С вами свяжется менеджер компании"
+            )
             return redirect(reverse("cabinet:responses_list"))
         form = ResponseForm(request.POST)
         return render(
@@ -151,6 +185,10 @@ class PageResponseView(View):
 
 
 class FilterProductView(View):
+    """
+    Представление для вывода отфильтрованного списка предложений
+    """
+
     def get(
         self,
         request,
