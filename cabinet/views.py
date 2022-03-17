@@ -33,6 +33,10 @@ class CreateProductView(View):
             # добавление url продукта в Redis
             r.add_key_product_url(product)
             return redirect(reverse("cabinet:create"))
+        form = ProductForm(request.POST)
+        return render(
+            request, "cabinet/create_product.html", {"space": "cabinet", "form": form}
+        )
 
 
 class ListProductView(View):
