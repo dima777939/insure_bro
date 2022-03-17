@@ -13,6 +13,14 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = ["category", "name", "price", "interest_rate", "period"]
 
+    def clean_interest_rate(self):
+        interest_rate = self.cleaned_data.get("interest_rate")
+        if int(interest_rate) > 100 or int(interest_rate) < 0:
+            raise forms.ValidationError(
+                "Процентная ставка может быть в пределах от 0 до 100"
+            )
+        return interest_rate
+
 
 class ResponseForm(forms.ModelForm):
     """
@@ -56,6 +64,7 @@ class FilterProductForm(forms.Form):
     min_price = forms.IntegerField(initial=0, min_value=0, label="Минимальная цена")
     max_price = forms.IntegerField(
         initial=9999999999,
+        min_value=0,
         max_value=9999999999,
         label="Максимальная цена",
     )
@@ -63,7 +72,7 @@ class FilterProductForm(forms.Form):
         initial=0, min_value=0, label="Минимальная % ставка"
     )
     max_interest_rate = forms.IntegerField(
-        initial=100, max_value=100, label="Максимальная % ставка"
+        initial=100, min_value=0, max_value=100, label="Максимальная % ставка"
     )
     period = forms.ChoiceField(choices=PERIODS, required=False, label="Период")
 
