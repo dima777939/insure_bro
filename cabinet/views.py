@@ -1,5 +1,7 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.contrib import messages
 
@@ -12,6 +14,7 @@ from .redis_data import RedisData
 r = RedisData()
 
 
+@method_decorator(login_required, name="dispatch")
 class CreateProductView(View):
     """
     Представление для создания продукта
@@ -39,6 +42,7 @@ class CreateProductView(View):
         )
 
 
+@method_decorator(login_required, name="dispatch")
 class ListProductView(View):
     """
     Представление для вывода, в кабинете, списка продуктов компании
@@ -55,13 +59,13 @@ class ListProductView(View):
         )
 
 
+@method_decorator(login_required, name="dispatch")
 class ListResponseView(View):
     """
     Представление для вывода, в кабинете, списка откликов на продукты компании
     """
 
     def get(self, request, completed=None):
-        if request.user.is_authenticated:
             company = request.user
             responses = Response.objects.filter(
                 product__company_id=company.pk, finished=False
@@ -77,16 +81,15 @@ class ListResponseView(View):
                 "cabinet/responses_to_company.html",
                 {"space": "cabinet", "responses": responses, "button": button},
             )
-        return redirect(reverse("account:login"))
 
 
+@method_decorator(login_required, name="dispatch")
 class ResponseAction(View):
     """
     Представление для обновления статуса отклика или его удаления
     """
 
     def get(self, request, response_id, delete=None):
-        if request.user.is_authenticated:
             company_id = request.user.id
             response = get_object_or_404(Response, id=response_id)
             response_company_id = response.product.company.id
@@ -103,13 +106,13 @@ class ResponseAction(View):
             return redirect(reverse("cabinet:responses_list"))
 
 
+@method_decorator(login_required, name="dispatch")
 class ProductDeleteView(View):
     """
     Представление для удаления продукта компании
     """
 
     def get(self, request, product_id):
-        if request.user.is_authenticated:
             company_id = request.user.id
             product = get_object_or_404(Product, id=product_id)
             product_company_id = product.company.id

@@ -169,3 +169,7 @@ CELERY_TRACK_STARTED = True
 REDIS_HOST = "redis"
 REDIS_PORT = 6379
 REDIS_DB = 0
+
+# login url
+LOGIN_URL = "/account/login/"
+LOGIN_REDIRECT_URL = "/cabinet/products/"
