@@ -4,22 +4,22 @@ from . import views
 app_name = "cabinet"
 
 urlpatterns = [
-    path("", views.MainResponseView.as_view(), name="responses_list"),
+    path("", views.MainResponseListView.as_view(), name="responses_list"),
     path(
         "<int:product_id>/", views.PageResponseView.as_view(), name="page_response_form"
     ),
     path("create/", views.CreateProductView.as_view(), name="create"),
-    path("products/", views.ListProductView.as_view(), name="list_product"),
+    path("products/", views.ListProductListView.as_view(), name="list_product"),
     path(
         "product/delete/<int:product_id>/",
         views.ProductDeleteView.as_view(),
         name="delete_product",
     ),
-    path("responses/", views.ListResponseView.as_view(), name="responses_active"),
+    path("responses/", views.ListResponseListView.as_view(), name="responses_active"),
     path("filter/", views.FilterProductView.as_view(), name="filter_product"),
     path(
         "responses/<str:completed>/",
-        views.ListResponseView.as_view(),
+        views.ListResponseListView.as_view(),
         name="responses_completed",
     ),
     path(
@@ -34,7 +34,7 @@ urlpatterns = [
     ),
     path(
         "<slug:category_slug>/",
-        views.MainResponseView.as_view(),
+        views.MainResponseCategoryListView.as_view(),
         name="responses_list_category",
     ),
 ]

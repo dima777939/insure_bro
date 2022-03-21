@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.contrib import messages
+from django.views.generic import ListView
 
 from .forms import ProductForm, ResponseForm, FilterProductForm
 from .models import Product, Response, Category
@@ -43,44 +44,51 @@ class CreateProductView(View):
 
 
 @method_decorator(login_required, name="dispatch")
-class ListProductView(View):
+class ListProductListView(ListView):
     """
     Представление для вывода, в кабинете, списка продуктов компании
     """
 
-    def get(self, request):
-        company = request.user
+    model = Product
+    template_name = "cabinet/list_product.html"
+    paginate_by = 5
+    context_object_name = "products"
+    extra_context = {"space": "cabinet"}
+
+    def get_queryset(self):
+        company = self.request.user
         products = Product.objects.filter(company_id=company.pk)
-        products = r.get_products_with_views(products)
-        return render(
-            request,
-            "cabinet/list_product.html",
-            {"space": "cabinet", "products": products},
-        )
+        return r.get_products_with_views(products)
 
 
 @method_decorator(login_required, name="dispatch")
-class ListResponseView(View):
+class ListResponseListView(ListView):
     """
     Представление для вывода, в кабинете, списка откликов на продукты компании
     """
 
-    def get(self, request, completed=None):
-            company = request.user
-            responses = Response.objects.filter(
-                product__company_id=company.pk, finished=False
+    model = Response
+    template_name = "cabinet/responses_to_company.html"
+    paginate_by = 5
+    context_object_name = "responses"
+    extra_context = {"space": "cabinet"}
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        action = self.kwargs.get("completed", None)
+        context["button"] = "active"
+        if action == "completed":
+            context["button"] = "completed"
+        return context
+
+    def get_queryset(self):
+        company = self.request.user
+        action = self.kwargs.get("completed", None)
+        if action == "completed":
+            return Response.objects.filter(
+                product__company_id=company.pk, finished=True
             )
-            button = "active"
-            if completed == "completed":
-                responses = Response.objects.filter(
-                    product__company_id=company.pk, finished=True
-                )
-                button = "completed"
-            return render(
-                request,
-                "cabinet/responses_to_company.html",
-                {"space": "cabinet", "responses": responses, "button": button},
-            )
+        return Response.objects.filter(product__company_id=company.pk, finished=False)
 
 
 @method_decorator(login_required, name="dispatch")
@@ -90,20 +98,20 @@ class ResponseAction(View):
     """
 
     def get(self, request, response_id, delete=None):
-            company_id = request.user.id
-            response = get_object_or_404(Response, id=response_id)
-            response_company_id = response.product.company.id
-            if company_id == response_company_id:
-                if delete == "delete":
-                    response.delete()
-                    r.delete_product_key("response", response_id)
-                    return redirect(
-                        reverse("cabinet:responses_completed", args=["completed"])
-                    )
-                else:
-                    Response.objects.filter(id=response_id).update(finished=True)
-                    return redirect(reverse("cabinet:responses_active"))
-            return redirect(reverse("cabinet:responses_list"))
+        company_id = request.user.id
+        response = get_object_or_404(Response, id=response_id)
+        response_company_id = response.product.company.id
+        if company_id == response_company_id:
+            if delete == "delete":
+                response.delete()
+                r.delete_product_key("response", response_id)
+                return redirect(
+                    reverse("cabinet:responses_completed", args=["completed"])
+                )
+            else:
+                Response.objects.filter(id=response_id).update(finished=True)
+                return redirect(reverse("cabinet:responses_active"))
+        return redirect(reverse("cabinet:responses_list"))
 
 
 @method_decorator(login_required, name="dispatch")
@@ -113,43 +121,56 @@ class ProductDeleteView(View):
     """
 
     def get(self, request, product_id):
-            company_id = request.user.id
-            product = get_object_or_404(Product, id=product_id)
-            product_company_id = product.company.id
-            if company_id == product_company_id:
-                product.delete()
-                r.delete_product_key("product_views", product_id)
-                r.delete_product_key("product_url", product_id)
-                return redirect(reverse("cabinet:list_product"))
-            return redirect(reverse("cabinet:responses_list"))
+        company_id = request.user.id
+        product = get_object_or_404(Product, id=product_id)
+        product_company_id = product.company.id
+        if company_id == product_company_id:
+            product.delete()
+            r.delete_product_key("product_views", product_id)
+            r.delete_product_key("product_url", product_id)
+            return redirect(reverse("cabinet:list_product"))
+        return redirect(reverse("cabinet:responses_list"))
 
 
-class MainResponseView(View):
+class MainResponseListView(ListView):
     """
     Представление для вывода списка предложений от всех компаний
     """
 
-    def get(self, request, category_slug=None):
-        category = None
-        categories = Category.objects.all()
-        products = Product.objects.all()
-        form_filter = FilterProductForm()
-        if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
-            products = products.filter(category=category)
-            form_filter = FilterProductForm(initial={"category": category})
-        products = r.get_products_with_url(products)
-        return render(
-            request,
-            "cabinet/responses_to_product.html",
-            {
-                "category": category,
-                "categories": categories,
-                "products": products,
-                "form_filter": form_filter,
-                "products_count": len(products),
-            },
+    queryset = Product.objects.all()
+    template_name = "cabinet/responses_to_product.html"
+    paginate_by = 5
+    context_object_name = "products"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()
+        context["form_filter"] = FilterProductForm()
+        context["products_count"] = len(self.get_queryset())
+        context["page"] = "paginate"
+        return context
+
+    def get_queryset(self):
+        return r.get_products_with_url(self.queryset)
+
+
+class MainResponseCategoryListView(MainResponseListView):
+    """
+    Представление для вывода списка предложений от всех компаний по категориям
+    """
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = Category.objects.get(slug=self.kwargs.get("category_slug", None))
+        context["form_filter"] = FilterProductForm(initial={"category": category})
+        context["category"] = category
+        return context
+
+    def get_queryset(self):
+        products_queryset = Product.objects.filter(
+            category__slug=self.kwargs.get("category_slug", None)
         )
+        return r.get_products_with_url(products_queryset)
 
 
 class PageResponseView(View):
@@ -209,7 +230,6 @@ class FilterProductView(View):
                 products = Filter.get_products_filter_main(cd)
             category = cd["category"]
             categories = Category.objects.all()
-            response_form = ResponseForm()
             form_filter = FilterProductForm(request.GET)
             products = r.get_products_with_url(products)
             return render(
@@ -219,26 +239,18 @@ class FilterProductView(View):
                     "products": products,
                     "category": category,
                     "categories": categories,
-                    "response_form": response_form,
                     "form_filter": form_filter,
                     "products_count": len(products),
                 },
             )
-        products = None
-        category = None
         categories = Category.objects.all()
-        response_form = ResponseForm()
         form_filter = FilterProductForm(request.GET)
-        products = r.get_products_with_url(products)
         return render(
             request,
             "cabinet/responses_to_product.html",
             {
-                "products": products,
-                "category": category,
                 "categories": categories,
-                "response_form": response_form,
                 "form_filter": form_filter,
-                "products_count": len(products),
+                "products_count": 0,
             },
         )

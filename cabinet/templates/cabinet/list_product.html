@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load pluralize %}
+{% load bootstrap4 %}
 {% block title %}Страховые предложения{% endblock %}
 {% block content %}
     <h2>Активные предложения</h2>
@@ -33,5 +34,6 @@
 				</li>
 			{% endfor %}
 		</ul>
+	{% bootstrap_pagination page_obj %}
     {% include 'cabinet/off_canvas.html' %}
 {% endblock %}
