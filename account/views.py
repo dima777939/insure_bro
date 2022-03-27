@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views import View
 from django.http import HttpResponse
 
@@ -21,5 +22,7 @@ class CompanyRegisterView(View):
             return render(
                 request, "account/company/reg_done.html", {"new_company": new_company}
             )
-        else:
-            return HttpResponse("None")
+        reg_form = CompanyRegistrationForm(request.POST)
+        return render(
+            request, "account/company/registration.html", {"reg_form": reg_form}
+        )
