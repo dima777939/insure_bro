@@ -103,6 +103,9 @@ class ResponseAction(View):
         response_company_id = response.product.company.id
         if company_id == response_company_id:
             if delete == "delete":
+                if not response.finished:
+                    messages.error(request, "Нельзя удалить необработанный отклик")
+                    return redirect(reverse("cabinet:responses_list"))
                 response.delete()
                 r.delete_product_key("response", response_id)
                 return redirect(
@@ -225,9 +228,9 @@ class FilterProductView(View):
         if form.is_valid():
             cd = form.cleaned_data
             if cd["check_elastic"]:
-                products = Filter.get_products_elasticsearch_main(cd)
+                products = Filter(cd).get_products_elasticsearch_main()
             else:
-                products = Filter.get_products_filter_main(cd)
+                products = Filter(cd).get_products_filter_main()
             category = cd["category"]
             categories = Category.objects.all()
             form_filter = FilterProductForm(request.GET)

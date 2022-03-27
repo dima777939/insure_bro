@@ -75,3 +75,8 @@ class Response(models.Model):
     )
     email = models.EmailField(max_length=50, verbose_name="Электронная почта")
     finished = models.BooleanField(default=False, verbose_name="Отклик обработан")
+
+    class Meta:
+        verbose_name = "Отклик"
+        verbose_name_plural = "Отклики"
+        ordering = ["first_name"]

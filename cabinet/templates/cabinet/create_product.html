@@ -8,7 +8,12 @@
 		  		<h1>Новое страховое предложение</h1>
 		  		<form action="." method="post" class="form">
 			  		{% csrf_token %}
-             		{% bootstrap_form form layout="inline"%}
+{#             		{% bootstrap_form form layout="inline"%}#}
+					{% bootstrap_field form.category %}
+					{% bootstrap_field form.name %}
+					{% bootstrap_field form.price %}
+					{% bootstrap_field form.interest_rate %}
+					{% bootstrap_field form.period %}
 			  		{% bootstrap_button content="Создать" button_type="submit" button_class="btn btn-outline-secondary" size="md" %}
 		  		</form>
 			</div>

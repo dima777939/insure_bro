@@ -7,90 +7,63 @@ class Filter:
     Фильтрация продуктов по введенным параметрам
     """
 
-    @staticmethod
-    def get_products_filter_main(cd):
+    def __init__(self, cd):
+        self.company = cd["company"]
+        self.category = cd["category"]
+        self.min_price = cd["min_price"]
+        self.max_price = cd["max_price"]
+        self.min_interest_rate = cd["min_interest_rate"]
+        self.max_interest_rate = cd["max_interest_rate"]
+        self.period = cd["period"]
+        self.name = cd["name"]
+
+    def get_products_filter_main(self):
         """
         Использует Django ORM для фильтрации
-        :param cd:
-        :return:
         """
-        company = cd["company"]
-        category = cd["category"]
-        min_price = cd["min_price"]
-        max_price = cd["max_price"]
-        min_interest_rate = cd["min_interest_rate"]
-        max_interest_rate = cd["max_interest_rate"]
-        period = cd["period"]
-        if not company and not category:
-            products = Product.objects.filter(
-                price__range=(min_price, max_price),
-                interest_rate__range=(min_interest_rate, max_interest_rate),
-                period=period,
-            ).order_by("-date_create")
-        elif company and not category:
-            products = Product.objects.filter(
-                company=company,
-                interest_rate__range=(min_interest_rate, max_interest_rate),
-                price__range=(min_price, max_price),
-                period=period,
-            ).order_by("-date_create")
-        elif company and category:
-            products = Product.objects.filter(
-                company=company,
-                category=category,
-                price__range=(min_price, max_price),
-                interest_rate__range=(min_interest_rate, max_interest_rate),
-                period=period,
-            ).order_by("-date_create")
-        elif not company and category:
-            products = Product.objects.filter(
-                category=category,
-                price__range=(min_price, max_price),
-                interest_rate__range=(min_interest_rate, max_interest_rate),
-                period=period,
-            ).order_by("-date_create")
+        products = Product.objects.filter(
+            price__range=(self.min_price, self.max_price),
+            interest_rate__range=(self.min_interest_rate, self.max_interest_rate),
+        ).order_by("-date_create")
+        if self.company:
+            products = products.filter(company=self.company)
+        if self.category:
+            products = products.filter(category=self.category)
+        if self.period:
+            products = products.filter(period=self.period)
         return products
 
-    @staticmethod
-    def get_products_elasticsearch_main(cd):
+    def get_products_elasticsearch_main(self):
         """
         Использует elasticsearch для фильтрации
-        :param cd:
-        :return:
         """
         search = ProductDocument.search().extra(size=100)
-        company = cd["company"]
-        category = cd["category"]
-        name = cd["name"]
-        min_price = cd["min_price"]
-        max_price = cd["max_price"]
-        min_interest_rate = cd["min_interest_rate"]
-        max_interest_rate = cd["max_interest_rate"]
-
         products = search.filter(
-            "range", price={"gte": min_price, "lte": max_price}
+            "range", price={"gte": self.min_price, "lte": self.max_price}
         ).filter(
             "range",
             interest_rate={
-                "gte": min_interest_rate,
-                "lte": max_interest_rate,
+                "gte": self.min_interest_rate,
+                "lte": self.max_interest_rate,
             },
         )
-        if name:
+        if self.name:
             products = products.query(
                 "multi_match",
-                query=name,
+                query=self.name,
                 fields=["name", "category.name", "company.name"],
                 fuzziness="auto",
             )
-        if company:
-            products = products.query(
-                "multi_match", query=company.id, fields=["company.id", "company.name"]
-            )
-        if category:
+        if self.company:
             products = products.query(
                 "multi_match",
-                query=category.id,
+                query=self.company.id,
+                fields=["company.id", "company.name"],
+            )
+        if self.category:
+            products = products.query(
+                "multi_match",
+                query=self.category.id,
                 fields=["category.id", "category.name"],
             )
         products = products.sort("-date_create")
