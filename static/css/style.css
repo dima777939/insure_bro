@@ -107,6 +107,24 @@ h1, h2, h3, h5, h6 {
     align-items: flex-start;
 }
 
+.page-item.active .page-link{
+    background-color: #eedeff;
+    border-color: #ead7fd;
+    color: #bacbe6;
+}
+
+a.page-link {
+    color: #1a1e21;
+}
+
+a.page-link:focus {
+    border-color: #be8cee;
+}
+
+ul.pagination {
+    justify-content: center;
+}
+
 .arrow-1 {
     cursor: pointer;
     position: relative;

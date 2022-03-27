@@ -23,7 +23,11 @@
                  <form action="{% url "cabinet:page_response_form" product.id %}"
 					   method="post" class="form">
 					 {% csrf_token %}
-					 {% bootstrap_form response_form layout="inline" %}
+{#					 {% bootstrap_form response_form layout="inline" %}#}
+					 {% bootstrap_field response_form.first_name %}
+					 {% bootstrap_field response_form.last_name %}
+					 {% bootstrap_field response_form.phone %}
+					 {% bootstrap_field response_form.email %}
 					 {% bootstrap_button content="Отправить" button_type="submit" button_class="btn btn-outline-secondary" size="md" %}
 				 </form>
 			  </div>

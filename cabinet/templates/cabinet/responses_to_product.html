@@ -76,4 +76,7 @@
             </form>
         </div>
     </div>
+	{% if page %}
+		{% bootstrap_pagination page_obj %}
+	{% endif %}
 {% endblock %}

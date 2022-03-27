@@ -13,6 +13,7 @@
 				{% csrf_token %}
 				{% bootstrap_form form layout="inline" %}
 				{% bootstrap_button content="Вход" button_type="submit" button_class="btn btn-outline-secondary" size="md" %}
+				<input type="hidden" name="next" value="{{ next }}">
 			</form>
 		</div>
 	</div>
