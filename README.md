@@ -43,6 +43,13 @@
 
 ```docker-compose exec web /usr/src/insure_bro/manage.py search_index --rebuild```
 
+##Тестирование
+
+```docker-compose exec web  python /usr/src/insure_bro/manage.py test cabinet.tests```
+
+```docker-compose exec web  python /usr/src/insure_bro/manage.py test account.tests```
+
+
 ## Дополнительно
 
 Для тестирования функционала можно загрузить фикстуры в базу данных 
